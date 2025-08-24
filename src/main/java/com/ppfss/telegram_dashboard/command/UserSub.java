@@ -83,7 +83,6 @@ public class UserSub extends SubCommand {
     @Override
     public List<String> complete(CommandSender sender, String... args) {
         if (!sender.hasPermission(PERMISSION)) {
-            MessageConfig.getInstance().getNoPermission().send(sender);
             return null;
         }
 
