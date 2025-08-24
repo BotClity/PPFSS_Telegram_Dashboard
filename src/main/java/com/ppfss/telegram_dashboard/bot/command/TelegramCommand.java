@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Getter
 @Setter
 public abstract class TelegramCommand {

@@ -5,8 +5,8 @@
 package com.ppfss.libs.message;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class Placeholders {
     private final Map<String, List<String>> placeholders;
 

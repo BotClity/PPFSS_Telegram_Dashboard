@@ -8,10 +8,7 @@ import com.ppfss.telegram_dashboard.command.TelegramCommand;
 import com.ppfss.telegram_dashboard.config.Config;
 import com.ppfss.telegram_dashboard.config.MessageConfig;
 import com.ppfss.telegram_dashboard.config.UserConfig;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 

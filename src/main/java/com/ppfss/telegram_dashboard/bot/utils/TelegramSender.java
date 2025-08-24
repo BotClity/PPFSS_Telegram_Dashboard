@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class TelegramSender implements ConsoleCommandSender {
 
     private final ConsoleCommandSender wrapped;

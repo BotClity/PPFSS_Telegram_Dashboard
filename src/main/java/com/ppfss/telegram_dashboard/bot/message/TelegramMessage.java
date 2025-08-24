@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@SuppressWarnings("unused")
 public class TelegramMessage {
     @Getter
     private final List<String> rawMessage = new CopyOnWriteArrayList<>();
