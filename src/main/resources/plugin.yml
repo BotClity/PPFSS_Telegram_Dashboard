@@ -1,0 +1,5 @@
+name: PPFSS_Telegram
+version: '${project.version}'
+main: com.ppfss.telegram_dashboard.PPFSS_Telegram
+api-version: '1.16'
+load: STARTUP
