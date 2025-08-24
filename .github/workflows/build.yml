@@ -1,4 +1,5 @@
 name: Сборка
+
 on:
   pull_request:
     branches:
@@ -6,6 +7,7 @@ on:
   push:
     branches:
       - "main"
+  workflow_dispatch: 
 
 jobs:
   build:
@@ -42,15 +44,21 @@ jobs:
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
+      - name: Find built JAR
+        id: find_jar
+        run: |
+          FILE=$(find target -maxdepth 1 -type f -name "*.jar" ! -name "original-*.jar" ! -name "*-shaded.jar" | head -n 1)
+          echo "file=$FILE" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.VERSION }}
-          name: PPFSS_Telegram v${{ env.VERSION }}
+          name: PPFSS_Telegram_Dashboard v${{ env.VERSION }}
           body: "Автоматический релиз версии ${{ env.VERSION }}"
-          files: target/PPFSS_Telegram.jar
+          files: ${{ steps.find_jar.outputs.file }}
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
