@@ -111,5 +111,11 @@
             <version>4.9.3</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.20.0</version> <!-- версия Paper может отличаться -->
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

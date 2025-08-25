@@ -6,7 +6,9 @@ package com.ppfss.telegram_dashboard.bot.command;
 
 import com.ppfss.libs.utils.LogUtils;
 import com.ppfss.telegram_dashboard.bot.message.TelegramMessage;
+import com.ppfss.telegram_dashboard.bot.utils.TelegramLog4jHandler;
 import com.ppfss.telegram_dashboard.bot.utils.TelegramSender;
+import com.ppfss.telegram_dashboard.config.Config;
 import com.ppfss.telegram_dashboard.config.MessageConfig;
 import com.ppfss.telegram_dashboard.config.UserConfig;
 import org.bukkit.Bukkit;
@@ -28,11 +30,13 @@ public class CmdCommand extends TelegramCommand {
     private final ExecutorService cmdExecutor = Executors.newSingleThreadExecutor();
     private final TelegramMessage USAGE = new TelegramMessage("/cmd {команда...}");
     private final TelegramMessage SUCCESS = new TelegramMessage("Команда успешно выполнена, но ответной информации не поступило.");
+    private final TelegramLog4jHandler log4jHandler;
 
     public CmdCommand(Plugin plugin) {
         super("cmd");
         this.plugin = plugin;
         this.telegramSender = new TelegramSender(Bukkit.getConsoleSender());
+        this.log4jHandler = new TelegramLog4jHandler();
     }
 
     @Override
@@ -77,20 +81,31 @@ public class CmdCommand extends TelegramCommand {
 
     private CompletableFuture<String> executeCmd(String cmd) {
         CompletableFuture<String> future = new CompletableFuture<>();
-
         cmdExecutor.submit(() -> {
+
             new BukkitRunnable() {
                 @Override
                 public void run() {
-
+                    boolean dirtyCmd = Config.getInstance().isDirtyCmd();
+                    if (dirtyCmd){
+                        log4jHandler.enable();
+                    }
 
                     try {
                         Bukkit.dispatchCommand(telegramSender, cmd);
-                        future.complete(telegramSender.getLog());
+                        String logs = telegramSender.getLog();
+                        if (dirtyCmd){
+                            logs = logs + "\n" + String.join("\n", log4jHandler.getLogs());
+                        }
+                        future.complete(logs);
                     } catch (Exception e) {
                         future.completeExceptionally(e);
                     } finally {
                         telegramSender.clearLog();
+                        if (dirtyCmd) {
+                            log4jHandler.disable();
+                            log4jHandler.clear();
+                        }
                     }
                 }
             }.runTask(plugin);

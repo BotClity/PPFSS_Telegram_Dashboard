@@ -15,6 +15,7 @@ public class LogUtils {
     private static boolean DEBUG_ENABLED;
     @Getter
     private static boolean CYRILLIC_ENABLED;
+    @Getter
     private static Logger LOGGER;
 
     public static void init(Plugin plugin) {
