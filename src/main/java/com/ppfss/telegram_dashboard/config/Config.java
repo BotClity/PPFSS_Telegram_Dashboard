@@ -4,6 +4,7 @@
 
 package com.ppfss.telegram_dashboard.config;
 
+import com.google.gson.annotations.SerializedName;
 import com.ppfss.libs.config.YamlConfig;
 import com.ppfss.libs.config.YamlConfigLoader;
 import lombok.Getter;
@@ -14,6 +15,8 @@ public class Config extends YamlConfig {
 
     boolean debug = false;
     String token = "";
+    @SerializedName("dirty-telegram-cmd")
+    boolean dirtyCmd = false;
 
     public static void load(YamlConfigLoader loader) {
         instance = loader.loadConfig("config", Config.class);
