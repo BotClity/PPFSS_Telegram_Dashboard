@@ -12,6 +12,7 @@ import com.ppfss.telegram_dashboard.config.Config;
 import com.ppfss.telegram_dashboard.config.MessageConfig;
 import com.ppfss.telegram_dashboard.config.UserConfig;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -60,6 +61,7 @@ public class CmdCommand extends TelegramCommand {
         }
 
         executeCmd(command).thenAccept(str -> {
+            str = ChatColor.stripColor(str);
             if (str == null || str.isEmpty()) {
                 SUCCESS.sendAsync(chatId, getClient());
                 return;
