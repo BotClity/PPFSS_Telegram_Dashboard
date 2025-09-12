@@ -8,6 +8,7 @@ import com.ppfss.telegram_dashboard.command.TelegramCommand;
 import com.ppfss.telegram_dashboard.config.Config;
 import com.ppfss.telegram_dashboard.config.MessageConfig;
 import com.ppfss.telegram_dashboard.config.UserConfig;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
@@ -17,7 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public final class PPFSS_Telegram extends JavaPlugin {
-    private final ExecutorService bot = Executors.newSingleThreadExecutor(r ->new Thread(r, "TelegramBot"));
+    private final ExecutorService bot = Executors.newSingleThreadExecutor(r -> new Thread(r, "TelegramBot"));
     private TelegramBot telegramBot;
     private YamlConfigLoader configLoader;
     private TelegramClient telegramClient;
@@ -30,13 +31,12 @@ public final class PPFSS_Telegram extends JavaPlugin {
         configLoader = new YamlConfigLoader(this);
 
         Config.load(configLoader);
-        if (Config.getInstance().isDebug()){
+        if (Config.getInstance().isDebug()) {
             LogUtils.setDEBUG_ENABLED(true);
         }
 
         MessageConfig.load(configLoader);
         UserConfig.load(configLoader);
-
 
 
         String token = Config.getInstance().getToken();
@@ -45,15 +45,17 @@ public final class PPFSS_Telegram extends JavaPlugin {
             throw new RuntimeException("You need to set a token");
         }
 
-        telegramClient = new OkHttpTelegramClient(token);
 
-        new TelegramCommand(this, configLoader, telegramClient);
-        LogUtils.info("Команды зарегистрированы");
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            telegramClient = new OkHttpTelegramClient(token);
 
-        bot.submit(() -> {
-            telegramBot = new TelegramBot(token, this, telegramClient);
-        });
+            new TelegramCommand(this, configLoader, telegramClient);
+            LogUtils.info("Команды зарегистрированы");
 
+            bot.submit(() -> {
+                telegramBot = new TelegramBot(token, this, telegramClient);
+            });
+        }, 20);
 
     }
 
@@ -70,11 +72,11 @@ public final class PPFSS_Telegram extends JavaPlugin {
 
         if (!bot.isShutdown()) {
             bot.shutdown();
-            try{
-                if (!bot.awaitTermination(5, TimeUnit.SECONDS)){
+            try {
+                if (!bot.awaitTermination(5, TimeUnit.SECONDS)) {
                     bot.shutdownNow();
                 }
-            }catch (Exception exception){
+            } catch (Exception exception) {
                 bot.shutdownNow();
                 LogUtils.error("TelegramBot shutdown failed", exception);
             }
